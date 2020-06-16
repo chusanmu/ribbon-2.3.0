@@ -24,6 +24,11 @@ package com.netflix.loadbalancer;
  */
 public class NoOpPing implements IPing {
 
+    /**
+     * 永远返回true
+     * @param server
+     * @return
+     */
     @Override
     public boolean isAlive(Server server) {
         return true;

@@ -21,7 +21,7 @@ import com.netflix.client.config.IClientConfig;
 
 /**
  * Default simple implementation that marks the liveness of a Server
- * 
+ *  AbstractLoadBalancerPing的一个空实现，它是默认的Ping实现，spring cloud默认也是使用它作为默认实现，也就是说根本就没有心跳的效果
  * @author stonse
  * 
  */

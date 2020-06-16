@@ -20,6 +20,7 @@ package com.netflix.loadbalancer;
 import java.util.List;
 
 /**
+ * 该接口定义了获取服务器列表的方法
  * Interface that defines the methods sed to obtain the List of Servers
  * @author stonse
  *

@@ -18,6 +18,7 @@
 package com.netflix.loadbalancer;
 
 /**
+ * TODO: 永远返回一个bool常量，true or false
  * A utility Ping Implementation that returns whatever its been set to return
  * (alive or dead)
  * @author stonse
@@ -38,7 +39,12 @@ public class PingConstant implements IPing {
 				return constant;
 		}
 
-		public boolean isAlive(Server server) {
+	/**
+	 * 返回一个常量，true or false
+	 * @param server
+	 * @return
+	 */
+	public boolean isAlive(Server server) {
 				return constant;
 		}
 }

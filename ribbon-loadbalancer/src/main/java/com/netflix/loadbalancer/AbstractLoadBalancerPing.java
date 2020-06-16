@@ -22,14 +22,15 @@ import com.netflix.client.IClientConfigAware;
 /**
  * Class that provides the basic implementation of detmerining the "liveness" or
  * suitability of a Server (a node)
- * 
+ *  TODO: 和LoadBalancer有关的一种实现，用于探测服务器节点的适用性. 它是使用较多的ping策略的父类，很明显，子类需要复写isAlive()方法，它要求必须要关联上一个负载均衡器AbstractLoadBalancer.
  * @author stonse
  * 
  */
 public abstract class AbstractLoadBalancerPing implements IPing, IClientConfigAware{
 
     AbstractLoadBalancer lb;
-    
+
+
     @Override
     public boolean isAlive(Server server) {
         return true;

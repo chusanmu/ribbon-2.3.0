@@ -281,6 +281,7 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
         }
         lbTimer = new ShutdownEnabledTimer("NFLoadBalancer-PingTimer-" + name,
                 true);
+        // TODO: 调度pingTask()
         lbTimer.schedule(new PingTask(), 0, pingIntervalSeconds * 1000);
         forceQuickPing();
     }
@@ -692,7 +693,7 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
 
                 final List<Server> newUpList = new ArrayList<Server>();
                 final List<Server> changedServers = new ArrayList<Server>();
-
+                // TODO: 这里就是核心，只有ping后是活着的，就会把这个机器添加到up列表中
                 for (int i = 0; i < numCandidates; i++) {
                     boolean isAlive = results[i];
                     Server svr = allServers[i];
@@ -705,7 +706,7 @@ public class BaseLoadBalancer extends AbstractLoadBalancer implements
                         logger.debug("LoadBalancer [{}]:  Server [{}] status changed to {}", 
                     		name, svr.getId(), (isAlive ? "ALIVE" : "DEAD"));
                     }
-
+                    // TODO:  true -> 表示该机器是Up的，从而得到新的up列表就是最新的可用的机器列表了
                     if (isAlive) {
                         newUpList.add(svr);
                     }

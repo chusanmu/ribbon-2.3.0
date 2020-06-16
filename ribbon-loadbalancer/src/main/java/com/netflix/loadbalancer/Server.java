@@ -22,7 +22,7 @@ import com.netflix.util.Pair;
 /**
  * Class that represents a typical Server (or an addressable Node) i.e. a
  * Host:port identifier
- * 
+ *  TODO: 代表一台Server机器
  * @author stonse
  * 
  */
@@ -57,13 +57,34 @@ public class Server {
         public String getInstanceId();
     }
 
+    /**
+     * 未知Zone区域，这是每台server的默认区域
+     */
     public static final String UNKNOWN_ZONE = "UNKNOWN";
+    /**
+     * host 和 port啊
+     */
     private String host;
     private int port = 80;
+    /**
+     * 可能是http/https, 或者是tcp, udp等
+     */
     private String scheme;
+    /**
+     * id表示唯一 host +":" + port, ip + 端口可以唯一确定一台机器
+     */
     private volatile String id;
+    /**
+     * 标记这台机器 是否是活着的
+     */
     private volatile boolean isAliveFlag;
+    /**
+     * server所属的zone区域
+     */
     private String zone = UNKNOWN_ZONE;
+    /**
+     * 标记这台机器是否可以准备好 可以提供服务了，活着并不代表可以提供服务了
+     */
     private volatile boolean readyToServe = true;
 
     private MetaInfo simpleMetaInfo = new MetaInfo() {
@@ -88,6 +109,11 @@ public class Server {
         }
     };
 
+    /**
+     * 构造器
+     * @param host
+     * @param port
+     */
     public Server(String host, int port) {
         this(null, host, port);
     }
@@ -101,6 +127,11 @@ public class Server {
     }
 
     /* host:port combination */
+
+    /**
+     * 一台机器可以确定一个server,所以这么构造也是ok的
+     * @param id
+     */
     public Server(String id) {
         setId(id);
         isAliveFlag = false;
@@ -111,6 +142,10 @@ public class Server {
     // with conflicting results will still give nonsense(last one wins)
     // synchronization or no.
 
+    /**
+     * TODO: 此方法并不是synchronization同步的，所以其实存在线程不安全的情况
+     * @param isAliveFlag
+     */
     public void setAlive(boolean isAliveFlag) {
         this.isAliveFlag = isAliveFlag;
     }
@@ -124,6 +159,11 @@ public class Server {
         setId(hostPort);
     }
 
+    /**
+     * 规范化ID，任何uri最终都会被规范为ip+:+port的方式
+     * @param id
+     * @return
+     */
     static public String normalizeId(String id) {
         Pair<String, Integer> hostPort = getHostPort(id);
         if (hostPort == null) {
@@ -144,6 +184,11 @@ public class Server {
         return null;
     }
 
+    /**
+     * 这里注意，使用自定义的数据结构Pair
+     * @param id
+     * @return
+     */
     static Pair<String, Integer> getHostPort(String id) {
         if (id != null) {
             String host = null;

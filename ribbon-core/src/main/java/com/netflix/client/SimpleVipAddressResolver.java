@@ -33,33 +33,36 @@ import com.netflix.config.ConfigurationManager;
  * the first of the comma separated list and progresses down the list only when
  * the priorr vipAddress contains no servers.
  * <p>
- * This class assumes that the vip address string may contain marcos in the format 
- * of ${foo}, where foo is a property in Archaius configuration, and tries to replace 
+ * This class assumes that the vip address string may contain marcos in the format
+ * of ${foo}, where foo is a property in Archaius configuration, and tries to replace
  * these macros with actual values.
- * 
+ *
  * <p>
  * e.g. vipAddress settings
- * 
+ *
  * <code>
  * ${foo}.bar:${port},${foobar}:80,localhost:8080
- * 
- * The above list will be resolved by this class as 
- * 
+ *
+ * The above list will be resolved by this class as
+ *
  * apple.bar:80,limebar:80,localhost:8080
- * 
+ *
  * provided that the Configuration library resolves the property foo=apple,port=80 and foobar=limebar
- * 
+ *
  * </code>
- * 
+ *  地址解析
  * @author stonse
- * 
+ *
  */
 public class SimpleVipAddressResolver implements VipAddressResolver {
 
+    /**
+     * 定义个 正则表达式，去匹配 匹配到 ${} 然后进行替换
+     */
     private static final Pattern VAR_PATTERN = Pattern.compile("\\$\\{(.*?)\\}");
 
     /**
-     * Resolve the vip address by replacing macros with actual values in configuration. 
+     * Resolve the vip address by replacing macros with actual values in configuration.
      * If there is no macro, the passed in string will be returned. If a macro is found but
      * there is no property defined in configuration, the same macro is returned as part of the
      * result.
@@ -71,19 +74,23 @@ public class SimpleVipAddressResolver implements VipAddressResolver {
         }
         return replaceMacrosFromConfig(vipAddressMacro);
     }
-    
+
     private static String replaceMacrosFromConfig(String macro) {
         String result = macro;
+        // 去匹配结果啊
         Matcher matcher = VAR_PATTERN.matcher(result);
+        // 找到 然后进行替换之
         while (matcher.find()) {
             String key = matcher.group(1);
             String value = ConfigurationManager.getConfigInstance().getString(key);
+            // TODO: 不为空的话，进行替换
             if (value != null) {
                 result = result.replaceAll("\\$\\{" + key + "\\}", value);
+                // TODO: 重新去适配matcher
                 matcher = VAR_PATTERN.matcher(result);
             }
-        }        
-        return result.trim();        
+        }
+        return result.trim();
     }
 
 }
